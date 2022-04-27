@@ -48,7 +48,7 @@ function App() {
     },
     {
       isSideNav: true,
-      navPath: NavigationPath.builds,
+      navPath: "/builds",
       title: "Builds",
       component: <Builds />,
     },
@@ -75,13 +75,21 @@ function App() {
       defaultManagedSidebarIsOpen={true}
     >
       <Routes>
-        <Route path={"/"} element={<Namespaces />} />
+      <Route path={"/"} element={<LoginPage />} />
+        <Route path={'/search'} element={<Search />} />
+        <Route path={'/namespaces'} element={<Namespaces />} />
+        <Route path={'/builds'} element={<Builds />} />
+        <Route path={'/administration'} element={<Administration />} />
+        <Route path={'/namespaces/:reponame'} element={<Repositories />} />
 
-        {routes.map((route, idx) => {
-          console.log("nav:", route.navPath);
+  
+        {/* {routes.map((route, idx) => {
+          console.log("nav:", route.navPath, "element:", route.component);
           <Route key={idx} path={route.navPath} element={route.component} />;
           // <Route key={idx} path="/search" element={NamespacesPage} />;
-        })}
+        })} */}
+                
+
       </Routes>
     </Page>
   );
@@ -167,7 +175,7 @@ function AppSidebar(props: { routes: SideNavProps[] }) {
 
 type SideNavProps = {
   isSideNav: boolean;
-  navPath: NavigationPath;
+  navPath: any;
   title: string;
   component: JSX.Element | any;
 };

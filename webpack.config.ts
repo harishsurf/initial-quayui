@@ -3,11 +3,11 @@
 import { Configuration as WebpackConfiguration } from "webpack";
 import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 import * as path from "path";
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-// import { ConsoleRemotePlugin } from "@openshift-console/dynamic-plugin-sdk-webpack";
+import { ConsoleRemotePlugin } from "@openshift-console/dynamic-plugin-sdk-webpack";
 
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
 }
@@ -15,8 +15,8 @@ interface Configuration extends WebpackConfiguration {
 const config: Configuration = {
   mode: "development",
   // No regular entry points. The remote container entry is handled by ConsoleRemotePlugin.
-  // entry: {},
-  entry: path.resolve(__dirname, './src/index.tsx'),
+  entry: {},
+  // entry: path.resolve(__dirname, "src", "index.tsx"),
   context: path.resolve(__dirname, "src"),
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -24,27 +24,38 @@ const config: Configuration = {
     chunkFilename: "[name]-chunk.js",
   },
   resolve: {
+    // modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     extensions: [".ts", ".tsx", ".js", ".jsx"],
+    // alias: {
+    //   handlebars: "handlebars/dist/handlebars.js",
+    // },
+    fallback: {
+      path: false,
+      buffer: false,
+      crypto: false
+    },
   },
   module: {
     rules: [
-      // {
-      //   test: /\.(jsx?|tsx?)$/,
-      //   exclude: /node_modules/,
-      //   use: [
-      //     {
-      //       loader: "ts-loader",
-      //       options: {
-      //         configFile: path.resolve(__dirname, "tsconfig.json"),
-      //       },
-      //     },
-      //   ],
-      // },
       {
         test: /\.(jsx?|tsx?)$/,
         exclude: /node_modules/,
-        use: "babel-loader"
+        use: [
+          {
+            loader: "ts-loader",
+            options: {
+              configFile: path.resolve(__dirname, "tsconfig.json"),
+              // transpileOnly: true,
+            },
+          },
+        ],
+        // type: "javascript/auto",
       },
+      // {
+      //   test: /\.(jsx?|tsx?)$/,
+      //   exclude: /node_modules/,
+      //   use: "babel-loader",
+      // },
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
@@ -53,28 +64,28 @@ const config: Configuration = {
         test: /\.scss$/,
         exclude: /node_modules/,
         use: [
-            {
-                loader: 'style-loader',
+          {
+            loader: "style-loader",
+          },
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: true,
             },
-            {
-                loader: 'css-loader',
-                options: {
-                    sourceMap: true,
-                },
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: true,
             },
-            {
-                loader: 'sass-loader',
-                options: {
-                    sourceMap: true,
-                },
-            },
+          },
         ],
       },
       {
         test: /\.(png|jpg|jpeg|gif|svg|woff2?|ttf|eot|otf)(\?.*$|$)/,
-        type: 'asset/resource',
+        type: "asset/resource",
         generator: {
-          filename: 'assets/[name].[ext]',
+          filename: "assets/[name].[ext]",
         },
       },
       {
@@ -86,26 +97,28 @@ const config: Configuration = {
     ],
   },
   devServer: {
-    static: './dist',
+    static: "./dist",
     port: 9001,
     // Allow bridge running in a container to connect to the plugin dev server.
-    allowedHosts: 'all',
+    allowedHosts: "all",
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Authorization"
+      "Access-Control-Allow-Headers":
+        "X-Requested-With, Content-Type, Authorization",
     },
     devMiddleware: {
       writeToDisk: true,
     },
   },
   plugins: [
-    // new ConsoleRemotePlugin(),
+    new ConsoleRemotePlugin(),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "public", "index.html")
+      template: path.join(__dirname, "public", "index.html"),
     }),
+    // new ProvidePlugin({ Buffer: ["buffer", "Buffer"], process: "process" }),
     new CopyWebpackPlugin({
-      patterns: [{ from: path.resolve(__dirname, 'locales'), to: 'locales' }],
+      patterns: [{ from: path.resolve(__dirname, "locales"), to: "locales" }],
     }),
   ],
   devtool: "source-map",
@@ -113,6 +126,9 @@ const config: Configuration = {
     chunkIds: "named",
     minimize: false,
   },
+  // stats: {
+  //   errorDetails: true,
+  // },
 };
 
 if (process.env.NODE_ENV === "production") {

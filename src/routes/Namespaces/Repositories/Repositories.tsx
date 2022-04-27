@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 
 // import {
 //   HorizontalNav,
-// } from '@openshift-console/dynamic-plugin-sdk';
+// } from '../../../../node_modules/@openshift-console/dynamic-plugin-sdk/lib/api/dynamic-core-api';
 // import RepositoriesTab from "./Tabs/RepositoriesTab";
 // import { NavigationPath } from "../../NavigationPath";
 // import TeamMembershipTab from "./Tabs/TeamMembershipTab";

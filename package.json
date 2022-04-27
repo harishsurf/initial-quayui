@@ -4,8 +4,6 @@
   "private": true,
   "dependencies": {
     "@material-ui/styles": "^4.11.5",
-    "@openshift-console/dynamic-plugin-sdk": "0.0.7",
-    "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.6",
     "@patternfly/patternfly": "^4.185.1",
     "@patternfly/react-core": "^4.202.16",
     "@patternfly/react-table": "^4.71.16",
@@ -30,7 +28,9 @@
     "start": "yarn ts-node node_modules/.bin/webpack serve",
     "ts-node": "ts-node -O '{\"module\":\"commonjs\"}'",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start1": "react-scripts start",
+    "build1": "react-scripts build"
   },
   "eslintConfig": {
     "extends": [
@@ -59,12 +59,18 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
+    "@openshift-console/dynamic-plugin-sdk": "0.0.8",
+    "@openshift-console/dynamic-plugin-sdk-internal": "0.0.6",
+    "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.6",
     "@types/react-dom": "^17.0.15",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
     "babel-loader": "^8.2.5",
+    "browserify-fs": "^1.0.0",
+    "buffer": "^6.0.3",
     "copy-webpack-plugin": "^10.2.4",
+    "crypto-browserify": "^3.12.0",
     "eslint": "^8.13.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-react-app": "^7.0.1",
@@ -72,21 +78,49 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
+    "handlebars": "^4.7.7",
     "html-webpack-plugin": "^5.5.0",
+    "node-util": "0.0.1",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
     "react-dom": "^18.0.0",
     "sass": "^1.50.0",
+    "stream-browserify": "^3.0.0",
     "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.8.1"
   },
-  "babel" : {
+  "consolePlugin": {
+    "name": "quay-ui-plugin",
+    "version": "0.0.1",
+    "displayName": "Quay ui Plugin",
+    "description": "Plugin for Quay UI",
+    "exposedModules": {
+    },
+    "dependencies": {
+      "@console/pluginAPI": "*"
+    }
+  },
+  "babel": {
     "presets": [
-      ["@babel/preset-react", { "runtime": "automatic" }],
+      [
+        "@babel/preset-react",
+        {
+          "runtime": "automatic"
+        }
+      ],
       "@babel/preset-typescript",
-      ["@babel/preset-env", { "modules": "auto" }]
-  ],
-  "plugins": ["@babel/transform-runtime"]
+      [
+        "@babel/preset-env",
+        {
+          "modules": "auto"
+        }
+      ]
+    ],
+    "plugins": [
+      "@babel/transform-runtime"
+    ]
   }
 }
